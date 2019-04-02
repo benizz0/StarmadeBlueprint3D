@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>testapp</title>
+</head>
+<body>
+    <input type="file" id="file" />
+    <div id="app">
+
+    </div>
+
+<!-- JS script -->
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/103/three.min.js" type="application/javascript"></script>
+    <script src="./app.js" ></script>
+
+    <script>
+        $("#file").change(function() {
+            var reader = new FileReader();
+            reader.onload = function() {
+
+                var arrayBuffer = this.result;
+
+                window.Test = new Smd3_bt(arrayBuffer);
+
+            };
+
+            reader.readAsArrayBuffer(this.files[0]);
+
+        })
+    </script>
+</body>
+</html>
