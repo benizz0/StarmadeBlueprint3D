@@ -1,12 +1,6 @@
 $ = typeof($) != "undefined" ? $ : jQuery;
 
-/**
- *
- * @copyright Luke Madhanga
- * @param String - base64
- * @returns {ArrayBufferLike}
- * @private
- */
+
 function _base64ToArrayBuffer(base64) {
     var binary_string =  window.atob(base64);
     var len = binary_string.length;
@@ -23,15 +17,67 @@ class Smbpl_bt {
     /**
      *
      * Struct of smbpl file
-     *
+     * @param {ArrayBuffer} arrbuffer - smbpl_bt file
      */
     constructor(arrbuffer) {
+        var point = 4;
 
+        this.numControl = Int32Array(arrbuffer.slice(point,point+4))[0];point+=4;
+
+        this.controlentr = (function () {
+            var rep = [];
+
+            var repObj = {};
+
+            repObj.vector = {
+                x:Int32Array(arrbuffer.slice(point,point+4))[0],
+                y:Int32Array(arrbuffer.slice(point+4,point+4+4))[0],
+                z:Int32Array(arrbuffer.slice(point+4+4,point+4+4+4))[0],
+            };point+=(4+4+4);
+
+            repObj.Numberblk = Int32Array(arrbuffer.slice(point,point+4))[0];point+=4;
+
+            //     ---------------
+
+            
+
+        })();
     }
 }
 
+class Smbph_bt {
+    /**
+     *
+     * @param {ArrayBuffer} arrbuffer - smbph_bt file
+     */
+    constructor(arrbuffer) {
+        var point = 4;
 
+        this.type = Int32Array(arrbuffer.slice(point,point+4))[0]; point +=4
 
+        this.vector1 = {
+            x:Int32Array(arrbuffer.slice(point,point+4))[0],
+            y:Int32Array(arrbuffer.slice(point+4,point+4+4))[0],
+            z:Int32Array(arrbuffer.slice(point+4+4,point+4+4+4))[0]
+        };point+=(4+4+4);
+
+        this.vector2 = {
+            x:Int32Array(arrbuffer.slice(point,point+4))[0],
+            y:Int32Array(arrbuffer.slice(point+4,point+4+4))[0],
+            z:Int32Array(arrbuffer.slice(point+4+4,point+4+4+4))[0]
+        };point+=(4+4+4);
+        this.blockentry = [];
+        this.NumberBlock = Int32Array(arrbuffer.slice(point,point+4))[0];
+        var actPoint = point;
+        while(actPoint + this.NumberBlock != point) {
+            this.blockentry.push({
+                id:Int16Array(arrbuffer.slice(point,point+2))[0],
+                quant:Int32Array(arrbuffer.slice(point+2,point+2+4))[0],
+            });
+            point += (2+4);
+        }
+    }
+}
 
  class Smd3_bt {
 
@@ -102,6 +148,16 @@ class Smbpl_bt {
                 obj.compressedSize = new Int32Array(arrbuffer.slice(Point,Point+4))[0];Point+=4;i+=4;
 
                 obj.data = arrbuffer.slice(Point);
+                /*obj.data = (function () {
+                    var rep = [];
+
+                    for(var i=0; i<4096;i++) {
+                        rep.push(arrbuffer.slice(Point,Point+1));
+                        Point++;
+                    };
+
+                    return rep;
+                })()*/
 
                 rep.push(obj);
 
